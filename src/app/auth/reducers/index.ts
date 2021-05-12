@@ -25,10 +25,13 @@ export const authReducer = createReducer(
   on(AuthActions.login, (state, action) => {
     console.log('Calling log in reducer');
 
-    debugger;
-
     return {
       user: action.user,
+    };
+  }),
+  on(AuthActions.logout, (state, action) => {
+    return {
+      user: undefined,
     };
   })
 );
