@@ -1,17 +1,18 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Course} from '../model/course';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {CoursesHttpService} from '../services/courses-http.service';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Course } from '../model/course';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { CoursesHttpService } from '../services/courses-http.service';
+import { CourseEntityService } from '../services/course-entity.service';
 
 @Component({
+  // tslint:disable-next-line: component-selector
   selector: 'course-dialog',
   templateUrl: './edit-course-dialog.component.html',
-  styleUrls: ['./edit-course-dialog.component.css']
+  styleUrls: ['./edit-course-dialog.component.css'],
 })
 export class EditCourseDialogComponent {
-
   form: FormGroup;
 
   dialogTitle: string;
@@ -20,14 +21,14 @@ export class EditCourseDialogComponent {
 
   mode: 'create' | 'update';
 
-  loading$:Observable<boolean>;
+  loading$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditCourseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data,
-    private coursesService: CoursesHttpService) {
-
+    private coursesService: CourseEntityService
+  ) {
     this.dialogTitle = data.dialogTitle;
     this.course = data.course;
     this.mode = data.mode;
@@ -36,18 +37,17 @@ export class EditCourseDialogComponent {
       description: ['', Validators.required],
       category: ['', Validators.required],
       longDescription: ['', Validators.required],
-      promo: ['', []]
+      promo: ['', []],
     };
 
-    if (this.mode == 'update') {
+    if (this.mode === 'update') {
       this.form = this.fb.group(formControls);
-      this.form.patchValue({...data.course});
-    }
-    else if (this.mode == 'create') {
+      this.form.patchValue({ ...data.course });
+    } else if (this.mode === 'create') {
       this.form = this.fb.group({
         ...formControls,
         url: ['', Validators.required],
-        iconUrl: ['', Validators.required]
+        iconUrl: ['', Validators.required],
       });
     }
   }
@@ -57,19 +57,20 @@ export class EditCourseDialogComponent {
   }
 
   onSave() {
-
     const course: Course = {
       ...this.course,
-      ...this.form.value
+      ...this.form.value,
     };
 
-    this.coursesService.saveCourse(course.id, course)
-      .subscribe(
-        () => this.dialogRef.close()
-      )
+    if (this.mode === 'update') {
+      this.coursesService.update(course);
 
-
+      this.dialogRef.close();
+    } else if (this.mode === 'create') {
+      this.coursesService.add(course).subscribe((newCourse) => {
+        console.log('New course: ', newCourse);
+        this.dialogRef.close();
+      });
+    }
   }
-
-
 }
