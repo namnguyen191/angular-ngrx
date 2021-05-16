@@ -24,7 +24,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {
   EntityDataService,
   EntityDefinitionService,
-  EntityMetadataMap,
+  EntityMetadataMap
 } from '@ngrx/data';
 import { compareCourses, Course } from './model/course';
 
@@ -32,31 +32,35 @@ import { compareLessons, Lesson } from './model/lesson';
 import { CourseEntityService } from './services/course-entity.service';
 import { CoursesResolver } from './services/courses.resolver';
 import { CoursesDataService } from './services/courses-data.service';
+import { LessonEntityService } from './services/lesson-entity.service';
 
 export const coursesRoutes: Routes = [
   {
     path: '',
     component: HomeComponent,
     resolve: {
-      courses: CoursesResolver,
-    },
+      courses: CoursesResolver
+    }
   },
   {
     path: ':courseUrl',
     component: CourseComponent,
     resolve: {
-      courses: CoursesResolver,
-    },
-  },
+      courses: CoursesResolver
+    }
+  }
 ];
 
 const entityMetadata: EntityMetadataMap = {
   Course: {
     sortComparer: compareCourses,
     entityDispatcherOptions: {
-      optimisticUpdate: true,
-    },
+      optimisticUpdate: true
+    }
   },
+  Lesson: {
+    sortComparer: compareLessons
+  }
 };
 
 @NgModule({
@@ -77,27 +81,28 @@ const entityMetadata: EntityMetadataMap = {
     MatDatepickerModule,
     MatMomentDateModule,
     ReactiveFormsModule,
-    RouterModule.forChild(coursesRoutes),
+    RouterModule.forChild(coursesRoutes)
   ],
   declarations: [
     HomeComponent,
     CoursesCardListComponent,
     EditCourseDialogComponent,
-    CourseComponent,
+    CourseComponent
   ],
   exports: [
     HomeComponent,
     CoursesCardListComponent,
     EditCourseDialogComponent,
-    CourseComponent,
+    CourseComponent
   ],
   entryComponents: [EditCourseDialogComponent],
   providers: [
     CoursesHttpService,
     CourseEntityService,
+    LessonEntityService,
     CoursesResolver,
-    CoursesDataService,
-  ],
+    CoursesDataService
+  ]
 })
 export class CoursesModule {
   constructor(

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Course } from '../model/course';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,6 +11,7 @@ import { CourseEntityService } from '../services/course-entity.service';
   selector: 'course-dialog',
   templateUrl: './edit-course-dialog.component.html',
   styleUrls: ['./edit-course-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditCourseDialogComponent {
   form: FormGroup;
@@ -37,7 +38,7 @@ export class EditCourseDialogComponent {
       description: ['', Validators.required],
       category: ['', Validators.required],
       longDescription: ['', Validators.required],
-      promo: ['', []],
+      promo: ['', []]
     };
 
     if (this.mode === 'update') {
@@ -47,7 +48,7 @@ export class EditCourseDialogComponent {
       this.form = this.fb.group({
         ...formControls,
         url: ['', Validators.required],
-        iconUrl: ['', Validators.required],
+        iconUrl: ['', Validators.required]
       });
     }
   }
@@ -59,7 +60,7 @@ export class EditCourseDialogComponent {
   onSave() {
     const course: Course = {
       ...this.course,
-      ...this.form.value,
+      ...this.form.value
     };
 
     if (this.mode === 'update') {

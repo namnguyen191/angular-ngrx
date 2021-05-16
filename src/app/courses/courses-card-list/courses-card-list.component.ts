@@ -1,10 +1,11 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { Course } from '../model/course';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -17,6 +18,7 @@ import { CourseEntityService } from '../services/course-entity.service';
   selector: 'courses-card-list',
   templateUrl: './courses-card-list.component.html',
   styleUrls: ['./courses-card-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CoursesCardListComponent implements OnInit {
   @Input()
@@ -38,7 +40,7 @@ export class CoursesCardListComponent implements OnInit {
     dialogConfig.data = {
       dialogTitle: 'Edit Course',
       course,
-      mode: 'update',
+      mode: 'update'
     };
 
     this.dialog
